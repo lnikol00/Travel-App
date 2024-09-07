@@ -1,0 +1,19 @@
+USE [TravelDB]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[DeleteEmployee] 
+	@id INT
+AS
+BEGIN
+
+	DELETE FROM
+		Employee
+	WHERE
+		Employee.ID = @id
+END
