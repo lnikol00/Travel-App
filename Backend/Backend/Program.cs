@@ -1,6 +1,8 @@
 
+using Backend.Logic.CarsLogic;
 using Backend.Logic.EmployeeLogic;
 using Backend.Models;
+using Backend.Services.CarsService;
 using Backend.Services.EmployeeService;
 
 namespace Backend
@@ -22,12 +24,20 @@ namespace Backend
             builder.Services.AddSingleton<IEmployeeLogic, EmployeeLogic>();
             builder.Services.AddSingleton<IEmployeeService, EmployeeService>();
 
+            // Cars
+            builder.Services.AddSingleton<ICarsLogic, CarsLogic>();
+            builder.Services.AddSingleton<ICarsService, CarsService>();
+
             builder.Services.AddCors(p => p.AddPolicy("cors_policy_allow_all", builder =>
             {
                 builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
             }));
 
+            // Validation
             builder.Services.Configure<EmployeeValidation>(builder.Configuration.GetSection("EmployeeValidation"));
+            builder.Services.Configure<CarsValidation>(builder.Configuration.GetSection("CarsValidation"));
+
+            // Database
             builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
 
             var app = builder.Build();

@@ -64,7 +64,7 @@ namespace Backend.Services.EmployeeService
             connection.Open();
             using var reader = command.ExecuteReader();
 
-            var lstPlanes = new List<Employee>();
+            var lstEmployee = new List<Employee>();
 
             while (reader.Read())
             {
@@ -75,11 +75,11 @@ namespace Backend.Services.EmployeeService
                     LastName = reader.GetString(2),
                 };
 
-                lstPlanes.Add(employee);
+                lstEmployee.Add(employee);
             }
 
             connection.Close();
-            return lstPlanes;
+            return lstEmployee;
         }
 
         // UPDATE EMPLOYEE
