@@ -1,9 +1,11 @@
 
 using Backend.Logic.CarsLogic;
 using Backend.Logic.EmployeeLogic;
+using Backend.Logic.TravelOrdersLogic;
 using Backend.Models;
 using Backend.Services.CarsService;
 using Backend.Services.EmployeeService;
+using Backend.Services.TravelOrdersService;
 
 namespace Backend
 {
@@ -28,6 +30,10 @@ namespace Backend
             builder.Services.AddSingleton<ICarsLogic, CarsLogic>();
             builder.Services.AddSingleton<ICarsService, CarsService>();
 
+            // TravelOrder
+            builder.Services.AddSingleton<ITravelOrdersLogic, TravelOrdersLogic>();
+            builder.Services.AddSingleton<ITravelOrdersService, TravelOrdersService>();
+
             builder.Services.AddCors(p => p.AddPolicy("cors_policy_allow_all", builder =>
             {
                 builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
@@ -36,6 +42,7 @@ namespace Backend
             // Validation
             builder.Services.Configure<EmployeeValidation>(builder.Configuration.GetSection("EmployeeValidation"));
             builder.Services.Configure<CarsValidation>(builder.Configuration.GetSection("CarsValidation"));
+            builder.Services.Configure<TravelOrderValidation>(builder.Configuration.GetSection("TravelOrderValidation"));
 
             // Database
             builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
