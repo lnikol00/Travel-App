@@ -1,0 +1,104 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 2rem 10rem;
+}
+
+.mainContainer span {
+    font-size: 1.5rem;
+    padding-top: .5rem;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.heading button {
+    background-color: #4535f1;
+    color: #fff;
+    border: 0;
+    margin-top: 10px;
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.carPreview {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+    align-items: center;
+    padding: 20px 0px;
+    margin: 10px 0;
+    border-bottom: 1px solid #fafafa;
+    cursor: pointer;
+    color: black;
+    box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.carPreview .tableContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.buttons button {
+    background-color: #4535f1;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 8px;
+    margin: 0 10px;
+}
+
+.carPreview h2 {
+    font-size: 20px;
+    color: #4535f1;
+    margin-bottom: 8px;
+}
+
+.carPreview p {
+    font-size: 20px;
+}
+
+.tablePreview {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+
+}
+
+.tablePreview h2 {
+    font-size: 20px;
+    color: #4535f1;
+    margin-bottom: 8px;
+}
+
+.tablePreview .title {
+    display: flex;
+    gap: 50px;
+}
+
+@media screen and (max-width:600px) {
+    .mainContainer {
+        margin: 0px auto;
+        padding-top: 30px;
+        text-align: center;
+    }
+
+    .carPreview {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .heading {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

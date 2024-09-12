@@ -1,0 +1,100 @@
+.mainContainer {
+    text-align: center;
+    margin: 0px auto;
+    padding-top: 50px;
+    max-width: 600px;
+}
+
+.mainContainer form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.mainContainer label {
+    text-align: left;
+    display: block;
+    font-size: 20px;
+}
+
+.mainContainer h2 {
+    font-size: 30px;
+    color: #4535f1;
+    margin-bottom: 30px;
+}
+
+.mainContainer input,
+.mainContainer select {
+    width: 600px;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    display: block;
+    font-size: 16px;
+}
+
+.mainContainer textarea {
+    width: 600px;
+    height: 150px;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    display: block;
+    font-size: 16px;
+}
+
+.mainContainer button {
+    background-color: #4535f1;
+    color: #fff;
+    border: 0;
+    margin-top: 10px;
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+.errmsg {
+    background-color: lightpink;
+    color: firebrick;
+    font-weight: bold;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+
+@media screen and (max-width:768px) {
+
+    .mainContainer input,
+    .mainContainer select {
+        width: 400px;
+    }
+
+    .mainContainer textarea {
+        width: 400px;
+    }
+}
+
+
+
+@media screen and (max-width:600px) {
+
+    .mainContainer {
+        margin: 5px 45px 50px;
+    }
+
+    .mainContainer input,
+    .mainContainer select {
+        width: 300px;
+    }
+
+    .mainContainer textarea {
+        width: 300px;
+    }
+}
