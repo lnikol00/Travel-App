@@ -60,6 +60,7 @@ namespace Backend
 
             app.UseAuthorization();
 
+            app.UseCors("cors_policy_allow_all");
 
             app.MapControllers();
 
