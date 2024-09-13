@@ -82,6 +82,34 @@ namespace Backend.Services.EmployeeService
             return lstEmployee;
         }
 
+        // GET BY ID 
+        public Employee? GetEmployeeByID(int id)
+        {
+            using var connection = new SqlConnection(_connectionDB);
+            using var command = new SqlCommand("[dbo].[GetEmployeeById]", connection);
+
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue("@id", id);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+
+            Employee employee = null;
+
+            if (reader.Read())
+            {
+                employee = new Employee
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    LastName = reader.GetString(2),
+                };
+            }
+            connection.Close();
+            return employee;
+        }
+
         // UPDATE EMPLOYEE
         public void UpdateEmployee(int id, Employee updatedEmployee)
         {

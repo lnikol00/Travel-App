@@ -39,6 +39,22 @@ namespace Backend.Controllers
             return Ok(allTravelOrders);
         }
 
+        // READ BY ID
+        [HttpGet("{id}")]
+        public ActionResult<TravelOrderInfoDTO> GetTravelOrderByID(int id)
+        {
+            var travelOrder = _travelOrdersLogic.GetTravelOrderByID(id);
+
+            if (travelOrder is null)
+            {
+                return NotFound($"Travel order with id:{id} doesn't exist!");
+            }
+            else
+            {
+                return Ok(TravelOrderInfoDTO.FromModel(travelOrder));
+            }
+        }
+
         // DELETE
         [HttpDelete("{id}")]
         public ActionResult DeleteTravelOrders(int id)

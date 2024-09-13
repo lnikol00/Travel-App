@@ -7,6 +7,7 @@ namespace Backend.Logic.EmployeeLogic
         void CreateNewEmployee(Employee? employee);
         void DeleteEmployee(int id);
         IEnumerable<Employee> GetAllEmployee();
+        Employee? GetEmployeeByID(int id);
         void UpdateEmployee(int id, Employee? employee);
     }
 }

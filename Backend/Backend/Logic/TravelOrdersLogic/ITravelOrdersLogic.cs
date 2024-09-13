@@ -7,6 +7,7 @@ namespace Backend.Logic.TravelOrdersLogic
         void CreateTravelOrder(CreateTravelOrder? travelOrder);
         void DeleteTravelOrder(int id);
         IEnumerable<TravelOrders> GetTravelOrders();
+        TravelOrders? GetTravelOrderByID(int id);
         void UpdateTravelOrder(int id, CreateTravelOrder? travelOrder);
     }
 }

@@ -39,6 +39,22 @@ namespace Backend.Controllers
             return Ok(allCars);
         }
 
+        // READ BY ID
+        [HttpGet("{id}")]
+        public ActionResult<CarInfoDTO> GetCarByID(int id)
+        {
+            var car = _carsLogic.GetCarByID(id);
+
+            if (car is null)
+            {
+                return NotFound($"Car with id:{id} doesn't exist!");
+            }
+            else
+            {
+                return Ok(CarInfoDTO.FromModel(car));
+            }
+        }
+
         // DELETE
         [HttpDelete("{id}")]
         public ActionResult DeleteCar(int id)

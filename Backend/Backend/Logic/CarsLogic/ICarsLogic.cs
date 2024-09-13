@@ -7,6 +7,7 @@ namespace Backend.Logic.CarsLogic
         void CreateNewCar(Cars? cars);
         void DeleteCar(int id);
         IEnumerable<Cars> GetAllCars();
+        Cars? GetCarByID(int id);
         void UpdateCar(int id, Cars? cars);
     }
 }

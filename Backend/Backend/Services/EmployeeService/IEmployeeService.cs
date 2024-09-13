@@ -7,6 +7,7 @@ namespace Backend.Services.EmployeeService
         void CreateNewEmployee(Employee employee);
         void DeleteEmployee(int id);
         List<Employee> GetAllEmployee();
+        Employee? GetEmployeeByID(int id);
         void UpdateEmployee(int id, Employee updatedEmployee);
     }
 }

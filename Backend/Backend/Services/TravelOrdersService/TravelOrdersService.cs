@@ -71,6 +71,39 @@ namespace Backend.Services.TravelOrdersService
             return lstTravelOrders;
         }
 
+        // GET BY ID 
+        public TravelOrders? GetTravelOrderByID(int id)
+        {
+            using var connection = new SqlConnection(_connectionDB);
+            using var command = new SqlCommand("[dbo].[GetTravelOrderById]", connection);
+
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue("@id", id);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+
+            TravelOrders travelOrders = null;
+
+            if (reader.Read())
+            {
+                travelOrders = new TravelOrders
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    LastName = reader.GetString(2),
+                    Brand = reader.GetString(3),
+                    Registration = reader.GetString(4),
+                    Date = DateTime.ParseExact(reader.GetString(5), _dbDatetimeFormat, null),
+                    Mileage = reader.GetInt32(6),
+                    Route = reader.GetString(7)
+                };
+            }
+            connection.Close();
+            return travelOrders;
+        }
+
         // Delete Travel Order
         public void DeleteTravelOrder(int id)
         {

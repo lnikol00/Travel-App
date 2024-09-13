@@ -82,6 +82,35 @@ namespace Backend.Services.CarsService
             return lstCars;
         }
 
+        // GET BY ID 
+        public Cars? GetCarByID(int id)
+        {
+            using var connection = new SqlConnection(_connectionDB);
+            using var command = new SqlCommand("[dbo].[GetCarById]", connection);
+
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue("@id", id);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+
+            Cars car = null;
+
+            if (reader.Read())
+            {
+                car = new Cars
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Registration = reader.GetString(2),
+                };
+            }
+            connection.Close();
+            return car;
+        }
+
+
         // UPDATE CAR
         public void UpdateCar(int id, Cars updatedCar)
         {

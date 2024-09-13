@@ -87,6 +87,11 @@ namespace Backend.Logic.EmployeeLogic
             _employeeService.DeleteEmployee(id);
         }
 
+        public Employee? GetEmployeeByID(int id)
+        {
+            return _employeeService.GetEmployeeByID(id);
+        }
+
         public IEnumerable<Employee> GetAllEmployee()
         {
             return _employeeService.GetAllEmployee();

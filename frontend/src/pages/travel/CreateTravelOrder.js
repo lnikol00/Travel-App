@@ -47,7 +47,7 @@ function CreateTravelOrder() {
     return (
         <div className={styles.mainContainer}>
             <Toast />
-            <h2>Add new car</h2>
+            <h2>Add new travel order</h2>
             <form onSubmit={handleSubmit}>
                 {error && <Error>{error}</Error>}
                 {loading && <Loading />}

@@ -87,6 +87,11 @@ namespace Backend.Logic.CarsLogic
             _carsService.DeleteCar(id);
         }
 
+        public Cars? GetCarByID(int id)
+        {
+            return _carsService.GetCarByID(id);
+        }
+
         public IEnumerable<Cars> GetAllCars()
         {
             return _carsService.GetAllCars();

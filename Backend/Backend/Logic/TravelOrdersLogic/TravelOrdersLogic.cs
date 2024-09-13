@@ -56,6 +56,19 @@ namespace Backend.Logic.TravelOrdersLogic
             }
         }
 
+        private void ValidateDate(DateTime date)
+        {
+            if (date == null)
+            {
+                throw new ErrorMessage("Field can't be empty");
+            }
+
+            if (date < DateTime.UtcNow)
+            {
+                throw new ErrorMessage("Invalid date!");
+            }
+        }
+
         public void CreateTravelOrder(CreateTravelOrder? travelOrder)
         {
             if (travelOrder is null)
@@ -66,7 +79,7 @@ namespace Backend.Logic.TravelOrdersLogic
             travelOrder.Id = -1;
             _ = travelOrder.EmployeeId;
             _ = travelOrder.CarsId;
-            _ = travelOrder.Date;
+            ValidateDate(travelOrder.Date);
             ValidateMileage(travelOrder.Mileage);
             ValidateRoute(travelOrder.Route);
 
@@ -83,7 +96,7 @@ namespace Backend.Logic.TravelOrdersLogic
             travelOrder.Id = -1;
             _ = travelOrder.EmployeeId;
             _ = travelOrder.CarsId;
-            _ = travelOrder.Date;
+            ValidateDate(travelOrder.Date);
             ValidateMileage(travelOrder.Mileage);
             ValidateRoute(travelOrder.Route);
 
@@ -93,6 +106,11 @@ namespace Backend.Logic.TravelOrdersLogic
         public void DeleteTravelOrder(int id)
         {
             _travelOrderService.DeleteTravelOrder(id);
+        }
+
+        public TravelOrders? GetTravelOrderByID(int id)
+        {
+            return _travelOrderService.GetTravelOrderByID(id);
         }
 
         public IEnumerable<TravelOrders> GetTravelOrders()

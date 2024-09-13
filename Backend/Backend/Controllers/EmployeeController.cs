@@ -39,6 +39,22 @@ namespace Backend.Controllers
             return Ok(allEmployee);
         }
 
+        // READ BY ID
+        [HttpGet("{id}")]
+        public ActionResult<EmployeeInfoDTO> GetEmployeeByID(int id)
+        {
+            var employee = _employeeLogic.GetEmployeeByID(id);
+
+            if (employee is null)
+            {
+                return NotFound($"Employee with id:{id} doesn't exist!");
+            }
+            else
+            {
+                return Ok(EmployeeInfoDTO.FromModel(employee));
+            }
+        }
+
         // DELETE
         [HttpDelete("{id}")]
         public ActionResult DeleteEmployee(int id)
