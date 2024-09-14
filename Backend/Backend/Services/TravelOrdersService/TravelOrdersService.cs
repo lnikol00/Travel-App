@@ -15,7 +15,7 @@ namespace Backend.Services.TravelOrdersService
         }
 
         // Create new Travel Order
-        public void CreateTravelOrder(CreateTravelOrder travelOrder)
+        public void CreateTravelOrder(TravelOrders travelOrder)
         {
             using var connection = new SqlConnection(_connectionDB);
             using var command = new SqlCommand("[dbo].[CreateTravelOrders]", connection);
@@ -50,7 +50,7 @@ namespace Backend.Services.TravelOrdersService
 
             while (reader.Read())
             {
-                { // Email does not exist, read all fields
+                {
                     var travelOrder = new TravelOrders
                     {
                         Id = reader.GetInt32(0),
@@ -60,7 +60,9 @@ namespace Backend.Services.TravelOrdersService
                         Registration = reader.GetString(4),
                         Date = DateTime.ParseExact(reader.GetString(5), _dbDatetimeFormat, null),
                         Mileage = reader.GetInt32(6),
-                        Route = reader.GetString(7)
+                        Route = reader.GetString(7),
+                        EmployeeId = reader.GetInt32(8),
+                        CarsId = reader.GetInt32(9)
                     };
 
                     lstTravelOrders.Add(travelOrder);
@@ -97,7 +99,9 @@ namespace Backend.Services.TravelOrdersService
                     Registration = reader.GetString(4),
                     Date = DateTime.ParseExact(reader.GetString(5), _dbDatetimeFormat, null),
                     Mileage = reader.GetInt32(6),
-                    Route = reader.GetString(7)
+                    Route = reader.GetString(7),
+                    EmployeeId = reader.GetInt32(8),
+                    CarsId = reader.GetInt32(9)
                 };
             }
             connection.Close();
@@ -126,7 +130,7 @@ namespace Backend.Services.TravelOrdersService
         }
 
         // Update Travel Order
-        public void UpdateTravelOrder(int id, CreateTravelOrder updatedTravelOrder)
+        public void UpdateTravelOrder(int id, TravelOrders updatedTravelOrder)
         {
             using var connection = new SqlConnection(_connectionDB);
             using var command = new SqlCommand("[dbo].[UpdateTravelOrders]", connection);

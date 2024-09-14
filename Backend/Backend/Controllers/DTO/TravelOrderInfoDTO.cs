@@ -12,6 +12,8 @@ namespace Backend.Controllers.DTO
         public DateTime Date { get; set; }
         public int Mileage { get; set; }
         public string Route { get; set; }
+        public int EmployeeId { get; set; }
+        public int CarsId { get; set; }
 
         public static TravelOrderInfoDTO FromModel(TravelOrders model)
         {
@@ -25,6 +27,8 @@ namespace Backend.Controllers.DTO
                 Date = model.Date,
                 Mileage = model.Mileage,
                 Route = model.Route,
+                EmployeeId = model.EmployeeId,
+                CarsId = model.CarsId,
             };
         }
     }

@@ -4,10 +4,10 @@ namespace Backend.Services.TravelOrdersService
 {
     public interface ITravelOrdersService
     {
-        void CreateTravelOrder(CreateTravelOrder travelOrder);
+        void CreateTravelOrder(TravelOrders travelOrder);
         void DeleteTravelOrder(int id);
         List<TravelOrders> GetTravelOrders();
         TravelOrders? GetTravelOrderByID(int id);
-        void UpdateTravelOrder(int id, CreateTravelOrder updatedTravelOrder);
+        void UpdateTravelOrder(int id, TravelOrders updatedTravelOrder);
     }
 }

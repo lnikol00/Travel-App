@@ -10,9 +10,9 @@ namespace Backend.Controllers.DTO
         public int Mileage { get; set; }
         public string Route { get; set; }
 
-        public CreateTravelOrder ToModel()
+        public TravelOrders ToModel()
         {
-            return new CreateTravelOrder
+            return new TravelOrders
             {
                 Id = -1,
                 EmployeeId = EmployeeId,

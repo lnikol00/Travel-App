@@ -19,7 +19,9 @@ BEGIN
 		CAR.Registration AS Registration,
 		[Date],
 		[Mileage],
-		[Route]
+		[Route],
+		TravelOrders.EmployeeID AS EmployeeId,
+        TravelOrders.CarsID AS CarsId
 	FROM
 		TravelOrders
 	INNER JOIN

@@ -1,6 +1,8 @@
 ﻿using Backend.Controllers.DTO;
+using Backend.Exceptions;
 using Backend.Filters;
 using Backend.Logic.CarsLogic;
+using Backend.Logic.TravelOrdersLogic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -10,11 +12,13 @@ namespace Backend.Controllers
     [ApiController]
     public class CarsController : ControllerBase
     {
+        private readonly ITravelOrdersLogic _travelOrdersLogic;
         private readonly ICarsLogic _carsLogic;
 
-        public CarsController(ICarsLogic carsLogic)
+        public CarsController(ICarsLogic carsLogic, ITravelOrdersLogic travelOrdersLogic)
         {
             _carsLogic = carsLogic;
+            _travelOrdersLogic = travelOrdersLogic;
         }
 
         // CREATE
@@ -59,6 +63,13 @@ namespace Backend.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteCar(int id)
         {
+            bool isCarInTravelOrder = _travelOrdersLogic.GetTravelOrders().Any(x => x.CarsId == id);
+
+            if (isCarInTravelOrder)
+            {
+                throw new ErrorMessage("Cannot delete this car! Active travel order exists.");
+            }
+
             _carsLogic.DeleteCar(id);
 
             return Ok();

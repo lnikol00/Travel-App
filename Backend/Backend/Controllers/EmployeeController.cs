@@ -1,6 +1,8 @@
 ﻿using Backend.Controllers.DTO;
+using Backend.Exceptions;
 using Backend.Filters;
 using Backend.Logic.EmployeeLogic;
+using Backend.Logic.TravelOrdersLogic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -10,11 +12,13 @@ namespace Backend.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        private readonly ITravelOrdersLogic _travelOrdersLogic;
         private readonly IEmployeeLogic _employeeLogic;
 
-        public EmployeeController(IEmployeeLogic employeeLogic)
+        public EmployeeController(IEmployeeLogic employeeLogic, ITravelOrdersLogic travelOrdersLogic)
         {
             _employeeLogic = employeeLogic;
+            _travelOrdersLogic = travelOrdersLogic;
         }
 
         // CREATE
@@ -59,6 +63,14 @@ namespace Backend.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteEmployee(int id)
         {
+            bool isEmployeeInTravelOrder = _travelOrdersLogic.GetTravelOrders().Any(x => x.EmployeeId == id);
+
+            if (isEmployeeInTravelOrder)
+            {
+                throw new ErrorMessage("Cannot delete this driver! Active travel order exists.");
+            }
+
+
             _employeeLogic.DeleteEmployee(id);
 
             return Ok();

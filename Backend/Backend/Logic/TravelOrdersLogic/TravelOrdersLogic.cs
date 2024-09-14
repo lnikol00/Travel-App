@@ -69,7 +69,7 @@ namespace Backend.Logic.TravelOrdersLogic
             }
         }
 
-        public void CreateTravelOrder(CreateTravelOrder? travelOrder)
+        public void CreateTravelOrder(TravelOrders? travelOrder)
         {
             if (travelOrder is null)
             {
@@ -86,7 +86,7 @@ namespace Backend.Logic.TravelOrdersLogic
             _travelOrderService.CreateTravelOrder(travelOrder);
         }
 
-        public void UpdateTravelOrder(int id, CreateTravelOrder? travelOrder)
+        public void UpdateTravelOrder(int id, TravelOrders? travelOrder)
         {
             if (travelOrder is null)
             {
