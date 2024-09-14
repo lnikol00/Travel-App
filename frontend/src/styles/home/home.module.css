@@ -1,0 +1,21 @@
+.mainContainer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.mainContainer div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 25px;
+}
+
+@media screen and (max-width:900px) {
+    .mainContainer {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
