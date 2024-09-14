@@ -14,5 +14,6 @@ Na kraju izvući analitiku za vremenski period koji djelatnik je imao najviše p
 
 Napravi .net backend i React frontend da postoje forme za unos izmjenu i brisanje podataka uz kontrolu 
 
-<b>Kontrola</b>
+<b>Kontrola</b>: 
+
 Brisanje dozvoljeno ako nije korišteno u evidenciji putni nalog da javi lijepu poruku podatak korišten pa nije moguće obrisati 
