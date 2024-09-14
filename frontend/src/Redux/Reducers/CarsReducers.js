@@ -9,9 +9,6 @@ import {
     CARS_CREATE_SUCCESS,
     CARS_CREATE_FAIL,
     CARS_CREATE_RESET,
-    CARS_EDIT_REQUEST,
-    CARS_EDIT_SUCCESS,
-    CARS_EDIT_FAIL
 } from "../Constants/CarsConstants";
 
 //CARS LIST
@@ -53,20 +50,6 @@ export const carsCreateReducer = (state = {}, action) => {
             return { loading: false, error: action.payload };
         case CARS_CREATE_RESET:
             return {};
-        default:
-            return state;
-    }
-}
-
-// EDIT CARS
-export const carsEditReducer = (state = { cars: [] }, action) => {
-    switch (action.type) {
-        case CARS_EDIT_REQUEST:
-            return { loading: true };
-        case CARS_EDIT_SUCCESS:
-            return { loading: false, cars: action.payload };
-        case CARS_EDIT_FAIL:
-            return { loading: false, error: action.payload };
         default:
             return state;
     }

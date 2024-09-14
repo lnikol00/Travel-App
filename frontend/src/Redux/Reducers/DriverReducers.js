@@ -9,9 +9,6 @@ import {
     DRIVERS_CREATE_SUCCESS,
     DRIVERS_CREATE_FAIL,
     DRIVERS_CREATE_RESET,
-    DRIVERS_EDIT_REQUEST,
-    DRIVERS_EDIT_SUCCESS,
-    DRIVERS_EDIT_FAIL
 } from "../Constants/DriverConstants";
 
 //DRIVERS LIST
@@ -53,20 +50,6 @@ export const driversCreateReducer = (state = {}, action) => {
             return { loading: false, error: action.payload };
         case DRIVERS_CREATE_RESET:
             return {};
-        default:
-            return state;
-    }
-}
-
-// EDIT DRIVERS
-export const driversEditReducer = (state = { drivers: [] }, action) => {
-    switch (action.type) {
-        case DRIVERS_EDIT_REQUEST:
-            return { loading: true };
-        case DRIVERS_EDIT_SUCCESS:
-            return { loading: false, drivers: action.payload };
-        case DRIVERS_EDIT_FAIL:
-            return { loading: false, error: action.payload };
         default:
             return state;
     }

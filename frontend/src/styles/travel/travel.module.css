@@ -44,7 +44,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 65px;
+    gap: 40px;
 }
 
 .buttons button {
@@ -82,7 +82,7 @@
 
 .tablePreview .title {
     display: flex;
-    gap: 60px;
+    gap: 40px;
 }
 
 @media screen and (max-width:600px) {

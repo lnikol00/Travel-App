@@ -1,53 +1,61 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from "react-router-dom"
+import Toast from '../../components/messages/Toast/Toast'
 import styles from "../../styles/cars/createCars.module.css"
 import { BrandsEnum } from './Brands'
-import { toast } from 'react-toastify'
-import Toast from '../../components/messages/Toast/Toast'
-import Loading from '../../components/messages/Loading/Loading'
-import Error from '../../components/messages/Error/Error'
-import { createCars, editCars } from '../../Redux/Actions/CarsAction'
-import { useDispatch, useSelector } from 'react-redux'
+import useUpdate from '../../hooks/useUpdate'
 
 
 function UpdateCars() {
 
     const [name, setName] = useState("");
     const [registration, setRegistration] = useState("");
+    const errRef = useRef(null)
+    const { car, fetchCar, handleEditCar, errMsg, setErrMsg } = useUpdate();
 
     const params = useParams();
-    const carId = params.id;
-
-    const dispatch = useDispatch();
-
-    const carsEdit = useSelector((state) => (state.carsEdit));
-    const { error, loading, car } = carsEdit;
 
     useEffect(() => {
-        if (car !== null && (car?.id !== carId)) {
-            dispatch(editCars(carId))
-        }
-        else {
-            setName(`${car.name}`);
-            setRegistration(`${car.registration}`);
-        }
+        setErrMsg('');
+    }, [name, registration])
 
-    }, [car, dispatch, carId])
+    useEffect(() => {
+        setName(`${car?.name}`)
+        setRegistration(`${car?.registration}`)
 
+        console.log(`${name} ${registration}`)
+    }, [car?.name, car?.registration])
+
+
+    useEffect(() => {
+        if (params.id) {
+            fetchCar(params.id);
+        }
+    }, [params.id]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (params.id) {
+            await handleEditCar(params.id, name, registration);
+        }
+    };
 
     return (
         <div className={styles.mainContainer}>
             <Toast />
-            <h2>Add new car</h2>
-            {error && <Error>{error}</Error>}
-            {loading && <Loading />}
-            <form>
+            <h2>Update car</h2>
+            <p ref={errRef} className={errMsg ? `${styles.errmsg}` : `${styles.offscreen}`} aria-live="assertive">
+                {errMsg}
+            </p>
+            <form onSubmit={handleSubmit}>
                 <label>
                     Car Brand:
                 </label>
                 <select
+
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    required
                 >
                     {Object.values(BrandsEnum).map((brand) => (
                         <option key={brand} value={brand}>
@@ -56,9 +64,12 @@ function UpdateCars() {
                     ))}
                 </select>
                 <label>
-                    Car Registration: (example: ZG-1523-DL)
+                    Car Registration:
                 </label>
-                <input type='text' value={registration} onChange={(e) => setRegistration(e.target.value)} />
+                <input type='text'
+                    required
+                    value={registration}
+                    onChange={(e) => setRegistration(e.target.value)} />
 
                 <button>Update Car</button>
             </form>

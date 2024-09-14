@@ -5,6 +5,7 @@ import { deleteTravel, listTravel } from '../../Redux/Actions/TravelOrdersAction
 import Loading from '../../components/messages/Loading/Loading';
 import Error from '../../components/messages/Error/Error';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 function TravelOrders() {
 
@@ -34,6 +35,11 @@ function TravelOrders() {
     const updateTravelOrder = (id) => {
         navigate(`/update-travel-order/${id}`)
     }
+
+    const formatDate = (dateString) => {
+        return moment(dateString).format('YYYY-MM-DD');
+    };
+
 
     return (
         <div className={styles.mainContainer}>
@@ -67,7 +73,7 @@ function TravelOrders() {
                                             <p>{travelOrder.lastName}</p>
                                             <p>{travelOrder.brand}</p>
                                             <p>{travelOrder.registration}</p>
-                                            <p>{new Date(travelOrder.date).toISOString().split('T')[0]}</p>
+                                            <p>{formatDate(travelOrder.date)}</p>
                                             <p>{travelOrder.mileage} km</p>
                                             <p>{travelOrder.route}</p>
                                         </div>

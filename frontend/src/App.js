@@ -10,6 +10,8 @@ import CreateCar from './pages/cars/CreateCar';
 import UpdateCars from './pages/cars/UpdateCars';
 import CreateDriver from './pages/drivers/CreateDriver';
 import CreateTravelOrder from './pages/travel/CreateTravelOrder';
+import UpdateDriver from './pages/drivers/UpdateDriver';
+import UpdateTravelOrder from './pages/travel/UpdateTravelOrder';
 
 
 function App() {
@@ -22,11 +24,13 @@ function App() {
             <Route index element={<Home />} />
             <Route path='drivers' element={<Drivers />} />
             <Route path='create-drivers' element={<CreateDriver />} />
+            <Route path='update-driver/:id' element={<UpdateDriver />} />
             <Route path='cars' element={<Cars />} />
             <Route path='create-cars' element={<CreateCar />} />
             <Route path='update-car/:id' element={<UpdateCars />} />
             <Route path='travel-orders' element={<TravelOrders />} />
             <Route path='create-travel-orders' element={<CreateTravelOrder />} />
+            <Route path='update-travel-order/:id' element={<UpdateTravelOrder />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </div>

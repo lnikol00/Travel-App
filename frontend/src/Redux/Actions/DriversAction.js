@@ -6,9 +6,6 @@ import {
     DRIVERS_DELETE_FAIL,
     DRIVERS_DELETE_REQUEST,
     DRIVERS_DELETE_SUCCESS,
-    DRIVERS_EDIT_FAIL,
-    DRIVERS_EDIT_REQUEST,
-    DRIVERS_EDIT_SUCCESS,
     DRIVERS_LIST_FAIL,
     DRIVERS_LIST_REQUEST,
     DRIVERS_LIST_SUCCESS
@@ -71,18 +68,3 @@ export const createDrivers = (name, lastName) => async (dispatch) => {
     }
 }
 
-// EDIT DRIVERS
-export const editDrivers = (id) => async (dispatch) => {
-    try {
-        dispatch({ type: DRIVERS_EDIT_REQUEST })
-        const { data } = await axios.get(`/api/DRIVERS/${id}`);
-        dispatch({ type: DRIVERS_EDIT_SUCCESS, payload: data })
-    } catch (error) {
-        const message =
-            error.response && error.response.data ? error.response.data : error.message;
-        dispatch({
-            type: DRIVERS_EDIT_FAIL,
-            payload: message
-        });
-    }
-}

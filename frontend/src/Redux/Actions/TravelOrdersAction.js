@@ -6,9 +6,6 @@ import {
     TRAVEL_DELETE_FAIL,
     TRAVEL_DELETE_REQUEST,
     TRAVEL_DELETE_SUCCESS,
-    TRAVEL_EDIT_FAIL,
-    TRAVEL_EDIT_REQUEST,
-    TRAVEL_EDIT_SUCCESS,
     TRAVEL_LIST_FAIL,
     TRAVEL_LIST_REQUEST,
     TRAVEL_LIST_SUCCESS
@@ -65,22 +62,6 @@ export const createTravel = (employeeId, carsId, date, mileage, route) => async 
             error.response && error.response.data ? error.response.data : error.message;
         dispatch({
             type: TRAVEL_CREATE_FAIL,
-            payload: message
-        });
-    }
-}
-
-// EDIT TRAVEL
-export const editTravel = (id) => async (dispatch) => {
-    try {
-        dispatch({ type: TRAVEL_EDIT_REQUEST })
-        const { data } = await axios.get(`/api/TravelOrders/${id}`);
-        dispatch({ type: TRAVEL_EDIT_SUCCESS, payload: data })
-    } catch (error) {
-        const message =
-            error.response && error.response.data ? error.response.data : error.message;
-        dispatch({
-            type: TRAVEL_EDIT_FAIL,
             payload: message
         });
     }

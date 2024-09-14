@@ -7,6 +7,9 @@ import Loading from '../../components/messages/Loading/Loading'
 import Error from '../../components/messages/Error/Error'
 import { createTravel } from '../../Redux/Actions/TravelOrdersAction'
 import { useDispatch, useSelector } from 'react-redux'
+import { listDrivers } from '../../Redux/Actions/DriversAction';
+import { listCars } from '../../Redux/Actions/CarsAction'
+
 
 function CreateTravelOrder() {
 
@@ -28,6 +31,11 @@ function CreateTravelOrder() {
     const { drivers } = driversList;
 
     useEffect(() => {
+        dispatch(listDrivers());
+        dispatch(listCars());
+    }, [dispatch])
+
+    useEffect(() => {
         if (success) {
             toast.success("Travel Order Added!")
             dispatch({ type: TRAVEL_CREATE_RESET });
@@ -43,6 +51,7 @@ function CreateTravelOrder() {
         e.preventDefault()
         dispatch(createTravel(employeeId, carsId, date, mileage, route))
     }
+
 
     return (
         <div className={styles.mainContainer}>

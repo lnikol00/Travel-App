@@ -9,9 +9,6 @@ import {
     TRAVEL_CREATE_SUCCESS,
     TRAVEL_CREATE_FAIL,
     TRAVEL_CREATE_RESET,
-    TRAVEL_EDIT_REQUEST,
-    TRAVEL_EDIT_SUCCESS,
-    TRAVEL_EDIT_FAIL
 } from "../Constants/TravelOrdersConstants";
 
 //TRAVEL LIST
@@ -53,20 +50,6 @@ export const travelCreateReducer = (state = {}, action) => {
             return { loading: false, error: action.payload };
         case TRAVEL_CREATE_RESET:
             return {};
-        default:
-            return state;
-    }
-}
-
-// EDIT TRAVEL
-export const travelEditReducer = (state = { travelOrders: [] }, action) => {
-    switch (action.type) {
-        case TRAVEL_EDIT_REQUEST:
-            return { loading: true };
-        case TRAVEL_EDIT_SUCCESS:
-            return { loading: false, travelOrders: action.payload };
-        case TRAVEL_EDIT_FAIL:
-            return { loading: false, error: action.payload };
         default:
             return state;
     }

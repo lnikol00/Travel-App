@@ -85,6 +85,20 @@
     gap: 50px;
 }
 
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+.errmsg {
+    margin-bottom: 15px;
+    background-color: lightpink;
+    color: red;
+    border-radius: 8px;
+    border: 1px solid red;
+    padding: 20px 40px;
+}
+
 @media screen and (max-width:600px) {
     .mainContainer {
         margin: 0px auto;

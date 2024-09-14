@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styles from "../../styles/drivers/drivers.module.css"
 import { useDispatch, useSelector } from "react-redux"
 import Loading from '../../components/messages/Loading/Loading';
@@ -17,6 +17,7 @@ function Drivers() {
     const driversDelete = useSelector((state) => state.driversDelete)
     const { error: errorDelete, success: successDelete } = driversDelete;
 
+
     useEffect(() => {
         dispatch(listDrivers());
     }, [dispatch, successDelete])
@@ -26,7 +27,7 @@ function Drivers() {
     }
 
     const deleteDriver = (id) => {
-        if (window.confirm("Are you sure you want to delete this driver?")) {
+        if (window.confirm("Are you sure you want to delete this car?")) {
             dispatch(deleteDrivers(id))
         }
     }

@@ -6,12 +6,9 @@ import {
     CARS_DELETE_FAIL,
     CARS_DELETE_REQUEST,
     CARS_DELETE_SUCCESS,
-    CARS_EDIT_FAIL,
-    CARS_EDIT_REQUEST,
-    CARS_EDIT_SUCCESS,
     CARS_LIST_FAIL,
     CARS_LIST_REQUEST,
-    CARS_LIST_SUCCESS
+    CARS_LIST_SUCCESS,
 } from "../Constants/CarsConstants"
 import axios from "../../api/axios";
 
@@ -65,22 +62,6 @@ export const createCars = (name, registration) => async (dispatch) => {
             error.response && error.response.data ? error.response.data : error.message;
         dispatch({
             type: CARS_CREATE_FAIL,
-            payload: message
-        });
-    }
-}
-
-// EDIT CARS
-export const editCars = (id) => async (dispatch) => {
-    try {
-        dispatch({ type: CARS_EDIT_REQUEST })
-        const { data } = await axios.get(`/api/Cars/${id}`);
-        dispatch({ type: CARS_EDIT_SUCCESS, payload: data })
-    } catch (error) {
-        const message =
-            error.response && error.response.data ? error.response.data : error.message;
-        dispatch({
-            type: CARS_EDIT_FAIL,
             payload: message
         });
     }
