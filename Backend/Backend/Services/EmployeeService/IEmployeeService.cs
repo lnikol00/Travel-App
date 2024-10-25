@@ -4,10 +4,10 @@ namespace Backend.Services.EmployeeService
 {
     public interface IEmployeeService
     {
-        void CreateNewEmployee(Employee employee);
-        void DeleteEmployee(int id);
-        List<Employee> GetAllEmployee();
-        Employee? GetEmployeeByID(int id);
-        void UpdateEmployee(int id, Employee updatedEmployee);
+        Task<Employee> CreateNewEmployee(Employee employee);
+        Task<Employee> DeleteEmployee(int id);
+        Task<List<Employee>> GetAllEmployee();
+        Task<Employee> GetEmployeeByID(int id);
+        Task<Employee> UpdateEmployee(int id, Employee updatedEmployee);
     }
 }

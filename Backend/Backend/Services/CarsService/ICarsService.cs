@@ -4,10 +4,10 @@ namespace Backend.Services.CarsService
 {
     public interface ICarsService
     {
-        void CreateNewCar(Cars cars);
-        void DeleteCar(int id);
-        List<Cars> GetAllCars();
-        Cars? GetCarByID(int id);
-        void UpdateCar(int id, Cars updatedCar);
+        Task<Cars> CreateNewCar(Cars cars);
+        Task<Cars> DeleteCar(int id);
+        Task<List<Cars>> GetAllCars();
+        Task<Cars> GetCarByID(int id);
+        Task<Cars> UpdateCar(int id, Cars updatedCar);
     }
 }

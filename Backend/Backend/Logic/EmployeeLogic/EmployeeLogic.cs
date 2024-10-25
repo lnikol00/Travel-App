@@ -54,47 +54,45 @@ namespace Backend.Logic.EmployeeLogic
             }
         }
 
-        public void CreateNewEmployee(Employee? employee)
+        public async Task<Employee> CreateNewEmployee(Employee? employee)
         {
             if (employee is null)
             {
                 throw new ErrorMessage("Cannot create a new employee. All fields must be entered correctly!");
             }
 
-            employee.Id = -1;
             ValidateName(employee.Name);
             ValidateLastName(employee.LastName);
 
-            _employeeService.CreateNewEmployee(employee);
+            return await _employeeService.CreateNewEmployee(employee);
         }
 
-        public void UpdateEmployee(int id, Employee? employee)
+        public async Task<Employee> UpdateEmployee(int id, Employee? employee)
         {
             if (employee is null)
             {
                 throw new ErrorMessage("Cannot update! All fields must be entered correctly!");
             }
 
-            employee.Id = -1;
             ValidateName(employee.Name);
             ValidateLastName(employee.LastName);
 
-            _employeeService.UpdateEmployee(id, employee);
+            return await _employeeService.UpdateEmployee(id, employee);
         }
 
-        public void DeleteEmployee(int id)
+        public async Task<Employee> DeleteEmployee(int id)
         {
-            _employeeService.DeleteEmployee(id);
+            return await _employeeService.DeleteEmployee(id);
         }
 
-        public Employee? GetEmployeeByID(int id)
+        public async Task<Employee> GetEmployeeByID(int id)
         {
-            return _employeeService.GetEmployeeByID(id);
+            return await _employeeService.GetEmployeeByID(id);
         }
 
-        public IEnumerable<Employee> GetAllEmployee()
+        public async Task<List<Employee>> GetAllEmployee()
         {
-            return _employeeService.GetAllEmployee();
+            return await _employeeService.GetAllEmployee();
         }
     }
 }

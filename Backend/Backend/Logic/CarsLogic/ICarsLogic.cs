@@ -4,10 +4,10 @@ namespace Backend.Logic.CarsLogic
 {
     public interface ICarsLogic
     {
-        void CreateNewCar(Cars? cars);
-        void DeleteCar(int id);
-        IEnumerable<Cars> GetAllCars();
-        Cars? GetCarByID(int id);
-        void UpdateCar(int id, Cars? cars);
+        Task<Cars> CreateNewCar(Cars? cars);
+        Task<Cars> DeleteCar(int id);
+        Task<List<Cars>> GetAllCars();
+        Task<Cars> GetCarByID(int id);
+        Task<Cars> UpdateCar(int id, Cars? cars);
     }
 }

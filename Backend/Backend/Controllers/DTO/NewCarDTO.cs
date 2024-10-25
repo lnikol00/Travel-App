@@ -11,7 +11,6 @@ namespace Backend.Controllers.DTO
         {
             return new Cars
             {
-                Id = -1,
                 Name = Name,
                 Registration = Registration,
             };

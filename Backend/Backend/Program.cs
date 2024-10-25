@@ -5,7 +5,9 @@ using Backend.Logic.TravelOrdersLogic;
 using Backend.Models;
 using Backend.Services.CarsService;
 using Backend.Services.EmployeeService;
+using Backend.Services.Models;
 using Backend.Services.TravelOrdersService;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend
 {
@@ -23,16 +25,16 @@ namespace Backend
             builder.Services.AddSwaggerGen();
 
             // Employee
-            builder.Services.AddSingleton<IEmployeeLogic, EmployeeLogic>();
-            builder.Services.AddSingleton<IEmployeeService, EmployeeService>();
+            builder.Services.AddScoped<IEmployeeLogic, EmployeeLogic>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             // Cars
-            builder.Services.AddSingleton<ICarsLogic, CarsLogic>();
-            builder.Services.AddSingleton<ICarsService, CarsService>();
+            builder.Services.AddScoped<ICarsLogic, CarsLogic>();
+            builder.Services.AddScoped<ICarsService, CarsService>();
 
             // TravelOrder
-            builder.Services.AddSingleton<ITravelOrdersLogic, TravelOrdersLogic>();
-            builder.Services.AddSingleton<ITravelOrdersService, TravelOrdersService>();
+            builder.Services.AddScoped<ITravelOrdersLogic, TravelOrdersLogic>();
+            builder.Services.AddScoped<ITravelOrdersService, TravelOrdersService>();
 
             builder.Services.AddCors(p => p.AddPolicy("cors_policy_allow_all", builder =>
             {
@@ -45,7 +47,9 @@ namespace Backend
             builder.Services.Configure<TravelOrderValidation>(builder.Configuration.GetSection("TravelOrderValidation"));
 
             // Database
-            builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
+
+            builder.Services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             var app = builder.Build();
 

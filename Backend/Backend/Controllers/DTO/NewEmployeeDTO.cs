@@ -11,7 +11,6 @@ namespace Backend.Controllers.DTO
         {
             return new Employee
             {
-                Id = -1,
                 Name = Name,
                 LastName = LastName,
             };

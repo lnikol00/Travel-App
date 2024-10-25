@@ -1,133 +1,148 @@
-﻿using Backend.Models;
+﻿using Backend.Exceptions;
 using Backend.Services.CarsService.Models;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Options;
+using Backend.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services.CarsService
 {
     public class CarsService : ICarsService
     {
-        private readonly string _connectionDB;
 
-        public CarsService(IOptions<DBConfiguration> configuration)
+        private DatabaseContext _db;
+
+        public CarsService(DatabaseContext db)
         {
-            _connectionDB = configuration.Value.ConnectionDB;
+            _db = db;
         }
 
         // CREATE NEW CAR
-        public void CreateNewCar(Cars cars)
+        public async Task<Cars> CreateNewCar(Cars cars)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[CreateCars]", connection);
+            var car = new Cars()
+            {
+                Name = cars.Name,
+                Registration = cars.Registration
+            };
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            var existingCar = await _db.Cars.FirstOrDefaultAsync(c => c.Name == car.Name && c.Registration == car.Registration);
 
-            command.Parameters.AddWithValue("@Name", cars.Name);
-            command.Parameters.AddWithValue("@Registration", cars.Registration);
+            if (existingCar == null)
+            {
+                _db.Cars.Add(car);
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+                try
+                {
+                    await _db.SaveChangesAsync();
+                }
+                catch
+                {
+                    throw new ErrorMessage("An error occurred while connecting to the database.");
+                }
+            }
+            else
+            {
+                throw new ErrorMessage("Car already exists!");
+            }
 
-            return;
+            return car;
+
         }
 
         // DELETE CAR
-        public void DeleteCar(int id)
+        public async Task<Cars> DeleteCar(int id)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[DeleteCars]", connection);
+            Cars car = await _db.Cars.FirstOrDefaultAsync(c => c.Id == id);
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            bool isCarInTravelOrder = _db.TravelOrders.Any(x => x.CarsId == id);
 
-            command.Parameters.AddWithValue("@id", id);
-
-            connection.Open();
-            int rowsAffected = command.ExecuteNonQuery();
-
-            if (rowsAffected < 1)
+            if (isCarInTravelOrder)
             {
-                throw new ArgumentException($"No car with ID = {id}.");
+                throw new ErrorMessage("Cannot delete this car! Active travel order exists.");
             }
 
-            connection.Close();
-        }
+            _db.Cars.Remove(car);
 
-        // GET ALL CARS
-        public List<Cars> GetAllCars()
-        {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[GetAllCars]", connection);
-
-            command.CommandType = System.Data.CommandType.StoredProcedure;
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-
-            var lstCars = new List<Cars>();
-
-            while (reader.Read())
+            try
             {
-                var cars = new Cars
-                {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    Registration = reader.GetString(2),
-                };
-
-                lstCars.Add(cars);
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new ErrorMessage("An error occurred while connecting to the database.");
             }
 
-            connection.Close();
-            return lstCars;
-        }
-
-        // GET BY ID 
-        public Cars? GetCarByID(int id)
-        {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[GetCarById]", connection);
-
-            command.CommandType = System.Data.CommandType.StoredProcedure;
-
-            command.Parameters.AddWithValue("@id", id);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-
-            Cars car = null;
-
-            if (reader.Read())
-            {
-                car = new Cars
-                {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    Registration = reader.GetString(2),
-                };
-            }
-            connection.Close();
             return car;
         }
 
 
-        // UPDATE CAR
-        public void UpdateCar(int id, Cars updatedCar)
+        // GET ALL CARS
+        public async Task<List<Cars>> GetAllCars()
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[UpdateCars]", connection);
+            List<Cars> lstCars = new List<Cars>();
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            var query = from car in _db.Cars
+                        select car;
 
-            command.Parameters.AddWithValue("@id", id);
-            command.Parameters.AddWithValue("@Name", updatedCar.Name);
-            command.Parameters.AddWithValue("@Registration", updatedCar.Registration);
+            var cars = query.ToList();
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+            foreach (var car in cars)
+            {
+                var model = new Cars()
+                {
+                    Id = car.Id,
+                    Name = car.Name,
+                    Registration = car.Registration
+                };
 
-            return;
+                lstCars.Add(model);
+            }
+
+            return lstCars;
         }
+
+        // GET BY ID 
+        public async Task<Cars> GetCarByID(int id)
+        {
+            var query = from c in _db.Cars
+                        where c.Id == id
+                        select c;
+            var car = await query.FirstOrDefaultAsync();
+
+            if (car == null)
+            {
+                return null;
+            }
+
+            var model = new Cars()
+            {
+                Id = id,
+                Name = car.Name,
+                Registration = car.Registration,
+            };
+
+            return model;
+        }
+
+        // UPDATE CAR
+        public async Task<Cars> UpdateCar(int id, Cars updatedCar)
+        {
+            Cars car = await _db.Cars.FirstOrDefaultAsync(c => c.Id == id);
+
+            car.Name = updatedCar.Name;
+            car.Registration = updatedCar.Registration;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new ErrorMessage("An error occurred while connecting to the database.");
+            }
+
+            return updatedCar;
+        }
+
+
     }
 }

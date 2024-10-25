@@ -1,8 +1,6 @@
 ﻿using Backend.Controllers.DTO;
-using Backend.Exceptions;
 using Backend.Filters;
 using Backend.Logic.CarsLogic;
-using Backend.Logic.TravelOrdersLogic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -12,42 +10,43 @@ namespace Backend.Controllers
     [ApiController]
     public class CarsController : ControllerBase
     {
-        private readonly ITravelOrdersLogic _travelOrdersLogic;
         private readonly ICarsLogic _carsLogic;
 
-        public CarsController(ICarsLogic carsLogic, ITravelOrdersLogic travelOrdersLogic)
+        public CarsController(ICarsLogic carsLogic)
         {
             _carsLogic = carsLogic;
-            _travelOrdersLogic = travelOrdersLogic;
         }
 
         // CREATE
         [HttpPost]
-        public ActionResult CreateNewCar([FromBody] NewCarDTO cars)
+        public async Task<ActionResult> CreateNewCar([FromBody] NewCarDTO cars)
         {
             if (cars == null)
             {
                 return BadRequest($"Incorect format!");
 
             }
-            _carsLogic.CreateNewCar(cars.ToModel());
+            await _carsLogic.CreateNewCar(cars.ToModel());
 
             return Ok();
         }
 
         // READ
         [HttpGet]
-        public ActionResult<IEnumerable<CarInfoDTO>> GetAllCars()
+        public async Task<ActionResult<List<CarInfoDTO>>> GetAllCars()
         {
-            var allCars = _carsLogic.GetAllCars().Select(x => CarInfoDTO.FromModel(x));
+            var allCars = await _carsLogic.GetAllCars();
+
+            var carInfoDTOs = allCars.Select(x => CarInfoDTO.FromModel(x)).ToList();
+
             return Ok(allCars);
         }
 
         // READ BY ID
         [HttpGet("{id}")]
-        public ActionResult<CarInfoDTO> GetCarByID(int id)
+        public async Task<ActionResult<CarInfoDTO>> GetCarByID(int id)
         {
-            var car = _carsLogic.GetCarByID(id);
+            var car = await _carsLogic.GetCarByID(id);
 
             if (car is null)
             {
@@ -61,30 +60,23 @@ namespace Backend.Controllers
 
         // DELETE
         [HttpDelete("{id}")]
-        public ActionResult DeleteCar(int id)
+        public async Task<ActionResult> DeleteCar(int id)
         {
-            bool isCarInTravelOrder = _travelOrdersLogic.GetTravelOrders().Any(x => x.CarsId == id);
-
-            if (isCarInTravelOrder)
-            {
-                throw new ErrorMessage("Cannot delete this car! Active travel order exists.");
-            }
-
-            _carsLogic.DeleteCar(id);
+            await _carsLogic.DeleteCar(id);
 
             return Ok();
         }
 
         // UPDATE
         [HttpPut("{id}")]
-        public ActionResult UpdateCar(int id, [FromBody] NewCarDTO updatedCar)
+        public async Task<ActionResult> UpdateCar(int id, [FromBody] NewCarDTO updatedCar)
         {
             if (updatedCar == null)
             {
                 return BadRequest();
             }
 
-            _carsLogic.UpdateCar(id, updatedCar.ToModel());
+            await _carsLogic.UpdateCar(id, updatedCar.ToModel());
 
             return Ok();
         }

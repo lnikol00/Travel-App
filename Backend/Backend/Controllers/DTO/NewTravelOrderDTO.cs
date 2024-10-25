@@ -6,15 +6,14 @@ namespace Backend.Controllers.DTO
     {
         public int EmployeeId { get; set; }
         public int CarsId { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public int Mileage { get; set; }
         public string Route { get; set; }
 
-        public TravelOrders ToModel()
+        public TravelOrderDB ToModel()
         {
-            return new TravelOrders
+            return new TravelOrderDB
             {
-                Id = -1,
                 EmployeeId = EmployeeId,
                 CarsId = CarsId,
                 Date = Date,

@@ -54,47 +54,45 @@ namespace Backend.Logic.CarsLogic
             }
         }
 
-        public void CreateNewCar(Cars? cars)
+        public async Task<Cars> CreateNewCar(Cars? cars)
         {
             if (cars is null)
             {
                 throw new ErrorMessage("Cannot add new car. All fields must be entered correctly!");
             }
 
-            cars.Id = -1;
             ValidateName(cars.Name);
             ValidateRegistration(cars.Registration);
 
-            _carsService.CreateNewCar(cars);
+            return await _carsService.CreateNewCar(cars);
         }
 
-        public void UpdateCar(int id, Cars? cars)
+        public async Task<Cars> UpdateCar(int id, Cars? cars)
         {
             if (cars is null)
             {
                 throw new ErrorMessage("Cannot update! All fields must be entered correctly!");
             }
 
-            cars.Id = -1;
             ValidateName(cars.Name);
             ValidateRegistration(cars.Registration);
 
-            _carsService.UpdateCar(id, cars);
+            return await _carsService.UpdateCar(id, cars);
         }
 
-        public void DeleteCar(int id)
+        public async Task<Cars> DeleteCar(int id)
         {
-            _carsService.DeleteCar(id);
+            return await _carsService.DeleteCar(id);
         }
 
-        public Cars? GetCarByID(int id)
+        public async Task<Cars> GetCarByID(int id)
         {
-            return _carsService.GetCarByID(id);
+            return await _carsService.GetCarByID(id);
         }
 
-        public IEnumerable<Cars> GetAllCars()
+        public async Task<List<Cars>> GetAllCars()
         {
-            return _carsService.GetAllCars();
+            return await _carsService.GetAllCars();
         }
     }
 }

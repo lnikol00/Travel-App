@@ -1,132 +1,145 @@
-﻿using Backend.Models;
+﻿using Backend.Exceptions;
 using Backend.Services.EmployeeService.Models;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Options;
+using Backend.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services.EmployeeService
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly string _connectionDB;
+        private DatabaseContext _db;
 
-        public EmployeeService(IOptions<DBConfiguration> configuration)
+        public EmployeeService(DatabaseContext db)
         {
-            _connectionDB = configuration.Value.ConnectionDB;
+            _db = db;
         }
 
         // CREATE NEW EMPLOYEE
-        public void CreateNewEmployee(Employee employee)
+        public async Task<Employee> CreateNewEmployee(Employee employee)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[CreateEmployee]", connection);
+            var driver = new Employee()
+            {
+                Name = employee.Name,
+                LastName = employee.LastName
+            };
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            var existingDriver = await _db.Employee.FirstOrDefaultAsync(e => e.Name == employee.Name && e.LastName == employee.LastName);
 
-            command.Parameters.AddWithValue("@Name", employee.Name);
-            command.Parameters.AddWithValue("@LastName", employee.LastName);
+            if (existingDriver == null)
+            {
+                _db.Employee.Add(driver);
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+                try
+                {
+                    await _db.SaveChangesAsync();
+                }
+                catch
+                {
+                    throw new ErrorMessage("An error occurred while connecting to the database.");
+                }
+            }
+            else
+            {
+                throw new ErrorMessage("Driver already exists!");
+            }
 
-            return;
+            return driver;
         }
 
         // DELETE EMPLOYEE
-        public void DeleteEmployee(int id)
+        public async Task<Employee> DeleteEmployee(int id)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[DeleteEmployee]", connection);
+            Employee driver = await _db.Employee.FirstOrDefaultAsync(e => e.Id == id);
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            bool isEmployeeInTravelOrder = _db.TravelOrders.Any(x => x.EmployeeId == id);
 
-            command.Parameters.AddWithValue("@id", id);
-
-            connection.Open();
-            int rowsAffected = command.ExecuteNonQuery();
-
-            if (rowsAffected < 1)
+            if (isEmployeeInTravelOrder)
             {
-                throw new ArgumentException($"No employee with ID = {id}.");
+                throw new ErrorMessage("Cannot delete this driver! Active travel order exists.");
             }
 
-            connection.Close();
+            _db.Employee.Remove(driver);
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new ErrorMessage("An error occurred while connecting to the database.");
+            }
+
+            return driver;
         }
 
         // GET ALL EMPLOYEE
-        public List<Employee> GetAllEmployee()
+        public async Task<List<Employee>> GetAllEmployee()
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[GetAllEmployee]", connection);
+            List<Employee> lstEmployee = new List<Employee>();
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            var query = from employee in _db.Employee
+                        select employee;
 
-            connection.Open();
-            using var reader = command.ExecuteReader();
+            var drivers = query.ToList();
 
-            var lstEmployee = new List<Employee>();
-
-            while (reader.Read())
+            foreach (var driver in drivers)
             {
-                var employee = new Employee
+                var model = new Employee()
                 {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    LastName = reader.GetString(2),
+                    Id = driver.Id,
+                    Name = driver.Name,
+                    LastName = driver.LastName
                 };
 
-                lstEmployee.Add(employee);
+                lstEmployee.Add(model);
             }
 
-            connection.Close();
             return lstEmployee;
         }
 
         // GET BY ID 
-        public Employee? GetEmployeeByID(int id)
+        public async Task<Employee> GetEmployeeByID(int id)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[GetEmployeeById]", connection);
+            var query = from e in _db.Employee
+                        where e.Id == id
+                        select e;
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            var driver = await query.FirstOrDefaultAsync();
 
-            command.Parameters.AddWithValue("@id", id);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-
-            Employee employee = null;
-
-            if (reader.Read())
+            if (driver == null)
             {
-                employee = new Employee
-                {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    LastName = reader.GetString(2),
-                };
+                return null;
             }
-            connection.Close();
-            return employee;
+
+            var model = new Employee()
+            {
+                Id = id,
+                Name = driver.Name,
+                LastName = driver.LastName,
+            };
+
+            return model;
+
         }
 
         // UPDATE EMPLOYEE
-        public void UpdateEmployee(int id, Employee updatedEmployee)
+        public async Task<Employee> UpdateEmployee(int id, Employee updatedEmployee)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[UpdateEmployee]", connection);
+            Employee driver = await _db.Employee.FirstOrDefaultAsync(e => e.Id == id);
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            driver.Name = updatedEmployee.Name;
+            driver.LastName = updatedEmployee.LastName;
 
-            command.Parameters.AddWithValue("@id", id);
-            command.Parameters.AddWithValue("@Name", updatedEmployee.Name);
-            command.Parameters.AddWithValue("@LastName", updatedEmployee.LastName);
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new ErrorMessage("An error occurred while connecting to the database.");
+            }
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
-
-            return;
+            return updatedEmployee;
         }
     }
 }

@@ -56,66 +56,64 @@ namespace Backend.Logic.TravelOrdersLogic
             }
         }
 
-        private void ValidateDate(DateTime date)
+        private void ValidateDate(string date)
         {
             if (date == null)
             {
                 throw new ErrorMessage("Field can't be empty");
             }
 
-            if (date < DateTime.UtcNow)
+            if (DateTime.Parse(date) < DateTime.UtcNow)
             {
                 throw new ErrorMessage("Invalid date!");
             }
         }
 
-        public void CreateTravelOrder(TravelOrders? travelOrder)
+        public async Task<TravelOrderDB> CreateTravelOrder(TravelOrderDB? travelOrder)
         {
             if (travelOrder is null)
             {
                 throw new ErrorMessage("Cannot create new travel order. All fields must be entered correctly!");
             }
 
-            travelOrder.Id = -1;
             _ = travelOrder.EmployeeId;
             _ = travelOrder.CarsId;
             ValidateDate(travelOrder.Date);
             ValidateMileage(travelOrder.Mileage);
             ValidateRoute(travelOrder.Route);
 
-            _travelOrderService.CreateTravelOrder(travelOrder);
+            return await _travelOrderService.CreateTravelOrder(travelOrder);
         }
 
-        public void UpdateTravelOrder(int id, TravelOrders? travelOrder)
+        public async Task<TravelOrderDB> UpdateTravelOrder(int id, TravelOrderDB? travelOrder)
         {
             if (travelOrder is null)
             {
                 throw new ErrorMessage("Cannot update! All fields must be entered correctly!");
             }
 
-            travelOrder.Id = -1;
             _ = travelOrder.EmployeeId;
             _ = travelOrder.CarsId;
             ValidateDate(travelOrder.Date);
             ValidateMileage(travelOrder.Mileage);
             ValidateRoute(travelOrder.Route);
 
-            _travelOrderService.UpdateTravelOrder(id, travelOrder);
+            return await _travelOrderService.UpdateTravelOrder(id, travelOrder);
         }
 
-        public void DeleteTravelOrder(int id)
+        public async Task<TravelOrderDB> DeleteTravelOrder(int id)
         {
-            _travelOrderService.DeleteTravelOrder(id);
+            return await _travelOrderService.DeleteTravelOrder(id);
         }
 
-        public TravelOrders? GetTravelOrderByID(int id)
+        public async Task<TravelOrders> GetTravelOrderByID(int id)
         {
-            return _travelOrderService.GetTravelOrderByID(id);
+            return await _travelOrderService.GetTravelOrderByID(id);
         }
 
-        public IEnumerable<TravelOrders> GetTravelOrders()
+        public async Task<List<TravelOrders>> GetTravelOrders()
         {
-            return _travelOrderService.GetTravelOrders();
+            return await _travelOrderService.GetTravelOrders();
         }
     }
 }

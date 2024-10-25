@@ -4,10 +4,10 @@ namespace Backend.Logic.EmployeeLogic
 {
     public interface IEmployeeLogic
     {
-        void CreateNewEmployee(Employee? employee);
-        void DeleteEmployee(int id);
-        IEnumerable<Employee> GetAllEmployee();
-        Employee? GetEmployeeByID(int id);
-        void UpdateEmployee(int id, Employee? employee);
+        Task<Employee> CreateNewEmployee(Employee? employee);
+        Task<Employee> DeleteEmployee(int id);
+        Task<List<Employee>> GetAllEmployee();
+        Task<Employee> GetEmployeeByID(int id);
+        Task<Employee> UpdateEmployee(int id, Employee? employee);
     }
 }

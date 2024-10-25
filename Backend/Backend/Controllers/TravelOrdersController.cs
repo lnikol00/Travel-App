@@ -19,31 +19,34 @@ namespace Backend.Controllers
 
         // CREATE
         [HttpPost]
-        public ActionResult CreateTravelOrder([FromBody] NewTravelOrderDTO travelOrder)
+        public async Task<ActionResult> CreateTravelOrder([FromBody] NewTravelOrderDTO travelOrder)
         {
             if (travelOrder == null)
             {
                 return BadRequest($"Incorect format!");
 
             }
-            _travelOrdersLogic.CreateTravelOrder(travelOrder.ToModel());
+            await _travelOrdersLogic.CreateTravelOrder(travelOrder.ToModel());
 
             return Ok();
         }
 
         // READ
         [HttpGet]
-        public ActionResult<IEnumerable<TravelOrderInfoDTO>> GetTravelOrders()
+        public async Task<ActionResult<List<TravelOrderInfoDTO>>> GetTravelOrders()
         {
-            var allTravelOrders = _travelOrdersLogic.GetTravelOrders().Select(x => TravelOrderInfoDTO.FromModel(x));
+            var allTravelOrders = await _travelOrdersLogic.GetTravelOrders();
+
+            var travelOrderDTOs = allTravelOrders.Select(x => TravelOrderInfoDTO.FromModel(x));
+
             return Ok(allTravelOrders);
         }
 
         // READ BY ID
         [HttpGet("{id}")]
-        public ActionResult<TravelOrderInfoDTO> GetTravelOrderByID(int id)
+        public async Task<ActionResult<TravelOrderInfoDTO>> GetTravelOrderByID(int id)
         {
-            var travelOrder = _travelOrdersLogic.GetTravelOrderByID(id);
+            var travelOrder = await _travelOrdersLogic.GetTravelOrderByID(id);
 
             if (travelOrder is null)
             {
@@ -57,23 +60,23 @@ namespace Backend.Controllers
 
         // DELETE
         [HttpDelete("{id}")]
-        public ActionResult DeleteTravelOrders(int id)
+        public async Task<ActionResult> DeleteTravelOrders(int id)
         {
-            _travelOrdersLogic.DeleteTravelOrder(id);
+            await _travelOrdersLogic.DeleteTravelOrder(id);
 
             return Ok();
         }
 
         // UPDATE
         [HttpPut("{id}")]
-        public ActionResult UpdateTravelOrders(int id, [FromBody] NewTravelOrderDTO updatedTravelOrder)
+        public async Task<ActionResult> UpdateTravelOrders(int id, [FromBody] NewTravelOrderDTO updatedTravelOrder)
         {
             if (updatedTravelOrder == null)
             {
                 return BadRequest();
             }
 
-            _travelOrdersLogic.UpdateTravelOrder(id, updatedTravelOrder.ToModel());
+            await _travelOrdersLogic.UpdateTravelOrder(id, updatedTravelOrder.ToModel());
 
             return Ok();
         }

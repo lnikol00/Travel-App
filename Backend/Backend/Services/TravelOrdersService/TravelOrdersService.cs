@@ -1,154 +1,192 @@
-﻿using Backend.Models;
+﻿using Backend.Exceptions;
+using Backend.Services.Models;
 using Backend.Services.TravelOrdersService.Models;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services.TravelOrdersService
 {
     public class TravelOrdersService : ITravelOrdersService
     {
-        private readonly string _connectionDB;
+        private DatabaseContext _db;
         private readonly string _dbDatetimeFormat = "yyyy-MM-dd";
-        public TravelOrdersService(IOptions<DBConfiguration> configuration)
+        public TravelOrdersService(DatabaseContext db)
         {
-            _connectionDB = configuration.Value.ConnectionDB;
+            _db = db;
         }
 
         // Create new Travel Order
-        public void CreateTravelOrder(TravelOrders travelOrder)
+        public async Task<TravelOrderDB> CreateTravelOrder(TravelOrderDB travelOrder)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[CreateTravelOrders]", connection);
+            var order = new TravelOrderDB()
+            {
+                EmployeeId = travelOrder.EmployeeId,
+                CarsId = travelOrder.CarsId,
+                Date = travelOrder.Date,
+                Route = travelOrder.Route,
+                Mileage = travelOrder.Mileage
+            };
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            var existingTravelOrder = await _db.TravelOrders.FirstOrDefaultAsync(
+                to => to.EmployeeId == travelOrder.EmployeeId
+                && to.CarsId == travelOrder.CarsId
+                && to.Date == travelOrder.Date
+                && to.Route == travelOrder.Route
+                && to.Mileage == travelOrder.Mileage);
 
-            command.Parameters.AddWithValue("@EmployeeID", travelOrder.EmployeeId);
-            command.Parameters.AddWithValue("@CarsID", travelOrder.CarsId);
-            command.Parameters.AddWithValue("@Date", travelOrder.Date.ToString(_dbDatetimeFormat));
-            command.Parameters.AddWithValue("@Mileage", travelOrder.Mileage);
-            command.Parameters.AddWithValue("@Route", travelOrder.Route);
+            if (existingTravelOrder == null)
+            {
+                _db.TravelOrders.Add(order);
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+                try
+                {
+                    await _db.SaveChangesAsync();
+                }
+                catch
+                {
+                    throw new ErrorMessage("an error occurred while connecting to the database.");
+                }
+            }
+            else
+            {
+                throw new ErrorMessage("Travel order already exists!");
+            }
 
-            return;
+
+            return order;
         }
 
         // Get All Travel Orders
-        public List<TravelOrders> GetTravelOrders()
+        public async Task<List<TravelOrders>> GetTravelOrders()
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[GetAllTravelOrders]", connection);
+            List<TravelOrders> lstTravelOrders = new List<TravelOrders>();
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            var query = from travelOrders in _db.TravelOrders
+                        join employee in _db.Employee on travelOrders.EmployeeId equals employee.Id
+                        join car in _db.Cars on travelOrders.CarsId equals car.Id
+                        select new
+                        {
+                            travelOrders.Id,
+                            EmployeeName = employee.Name,
+                            EmployeeLastName = employee.LastName,
+                            CarBrand = car.Name,
+                            CarRegistration = car.Registration,
+                            Date = DateTime.ParseExact(travelOrders.Date.ToString(), _dbDatetimeFormat, null),
+                            travelOrders.Mileage,
+                            travelOrders.Route,
+                            travelOrders.EmployeeId,
+                            travelOrders.CarsId
+                        };
 
-            connection.Open();
-            using var reader = command.ExecuteReader();
 
-            var lstTravelOrders = new List<TravelOrders>();
+            var orders = query.ToList();
 
-            while (reader.Read())
+            foreach (var order in orders)
             {
+                var model = new TravelOrders()
                 {
-                    var travelOrder = new TravelOrders
-                    {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        LastName = reader.GetString(2),
-                        Brand = reader.GetString(3),
-                        Registration = reader.GetString(4),
-                        Date = DateTime.ParseExact(reader.GetString(5), _dbDatetimeFormat, null),
-                        Mileage = reader.GetInt32(6),
-                        Route = reader.GetString(7),
-                        EmployeeId = reader.GetInt32(8),
-                        CarsId = reader.GetInt32(9)
-                    };
-
-                    lstTravelOrders.Add(travelOrder);
-                }
+                    Id = order.Id,
+                    Name = order.EmployeeName,
+                    LastName = order.EmployeeLastName,
+                    Brand = order.CarBrand,
+                    Registration = order.CarRegistration,
+                    Date = order.Date,
+                    Mileage = order.Mileage,
+                    Route = order.Route,
+                    EmployeeId = order.EmployeeId,
+                    CarsId = order.CarsId
+                };
+                lstTravelOrders.Add(model);
             }
 
-            connection.Close();
             return lstTravelOrders;
         }
 
         // GET BY ID 
-        public TravelOrders? GetTravelOrderByID(int id)
+        public async Task<TravelOrders> GetTravelOrderByID(int id)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[GetTravelOrderById]", connection);
+            var query = from travelOrder in _db.TravelOrders
+                        join employee in _db.Employee on travelOrder.EmployeeId equals employee.Id
+                        join car in _db.Cars on travelOrder.CarsId equals car.Id
+                        where travelOrder.Id == id
+                        select new
+                        {
+                            travelOrder.Id,
+                            EmployeeName = employee.Name,
+                            EmployeeLastName = employee.LastName,
+                            CarBrand = car.Name,
+                            CarRegistration = car.Registration,
+                            Date = DateTime.ParseExact(travelOrder.Date.ToString(), _dbDatetimeFormat, null),
+                            travelOrder.Mileage,
+                            travelOrder.Route,
+                            travelOrder.EmployeeId,
+                            travelOrder.CarsId
+                        };
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            var order = await query.FirstOrDefaultAsync();
 
-            command.Parameters.AddWithValue("@id", id);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-
-            TravelOrders travelOrders = null;
-
-            if (reader.Read())
+            if (order == null)
             {
-                travelOrders = new TravelOrders
-                {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    LastName = reader.GetString(2),
-                    Brand = reader.GetString(3),
-                    Registration = reader.GetString(4),
-                    Date = DateTime.ParseExact(reader.GetString(5), _dbDatetimeFormat, null),
-                    Mileage = reader.GetInt32(6),
-                    Route = reader.GetString(7),
-                    EmployeeId = reader.GetInt32(8),
-                    CarsId = reader.GetInt32(9)
-                };
+                return null;
             }
-            connection.Close();
-            return travelOrders;
+
+            var model = new TravelOrders()
+            {
+                Id = order.Id,
+                Name = order.EmployeeName,
+                LastName = order.EmployeeLastName,
+                Brand = order.CarBrand,
+                Registration = order.CarRegistration,
+                Date = order.Date,
+                Mileage = order.Mileage,
+                Route = order.Route,
+                EmployeeId = order.EmployeeId,
+                CarsId = order.CarsId,
+            };
+
+            return model;
         }
 
         // Delete Travel Order
-        public void DeleteTravelOrder(int id)
+        public async Task<TravelOrderDB> DeleteTravelOrder(int id)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[DeleteTravelOrders]", connection);
+            TravelOrderDB order = await _db.TravelOrders.FirstOrDefaultAsync(to => to.Id == id);
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            _db.TravelOrders.Remove(order);
 
-            command.Parameters.AddWithValue("@id", id);
-
-            connection.Open();
-            int rowsAffected = command.ExecuteNonQuery();
-
-            if (rowsAffected < 1)
+            try
             {
-                throw new ArgumentException($"No travel order with ID = {id}.");
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new ErrorMessage("An error occurred while connecting to the database.");
             }
 
-            connection.Close();
+            return order;
         }
 
         // Update Travel Order
-        public void UpdateTravelOrder(int id, TravelOrders updatedTravelOrder)
+        public async Task<TravelOrderDB> UpdateTravelOrder(int id, TravelOrderDB updatedTravelOrder)
         {
-            using var connection = new SqlConnection(_connectionDB);
-            using var command = new SqlCommand("[dbo].[UpdateTravelOrders]", connection);
+            TravelOrderDB order = await _db.TravelOrders.FirstOrDefaultAsync(to => to.Id == id);
 
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            order.EmployeeId = updatedTravelOrder.EmployeeId;
+            order.CarsId = updatedTravelOrder.CarsId;
+            order.Date = updatedTravelOrder.Date;
+            order.Mileage = updatedTravelOrder.Mileage;
+            order.Route = updatedTravelOrder.Route;
 
-            command.Parameters.AddWithValue("@id", id);
-            command.Parameters.AddWithValue("@EmployeeID", updatedTravelOrder.EmployeeId);
-            command.Parameters.AddWithValue("@CarsID", updatedTravelOrder.CarsId);
-            command.Parameters.AddWithValue("@Date", updatedTravelOrder.Date.ToString(_dbDatetimeFormat));
-            command.Parameters.AddWithValue("@Mileage", updatedTravelOrder.Mileage);
-            command.Parameters.AddWithValue("@Route", updatedTravelOrder.Route);
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new ErrorMessage("An error occurred while connecting to the database.");
+            }
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+            return updatedTravelOrder;
 
-            return;
         }
     }
 }
