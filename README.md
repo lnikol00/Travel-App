@@ -6,6 +6,8 @@
 * [.NET Core MVC](#.NET-Core-MVC)
 * [Konfiguracija baze podataka](#konfiguracija-baze-podataka)
 
+## Zadatak
+
 Potrebno je napraviti evidenciju putnih naloga gdje bi imali službene automobile, djelatnike te datum putovanja relacija i kilometraža. 
 
 Djelatnici i automobili su tzv. Sifrarnici pa se prilikom unosa u evidenciju biraju ne tipkaju. 
@@ -44,9 +46,9 @@ Tehnologije:
 Ovaj projekt je ASP.NET MVC aplikacija koja koristi Entity Framework za rad s bazom podataka. Tablice i relacije se kreiraju korištenjem EF migracija.
 
 Tehnologije:
-Kombinacija Backend i Frontend (cshtml): ASP.NET MVC
-Baza podataka: MSSQL Server
-ORM: Entity Framework Core
+* Kombinacija Backend i Frontend (cshtml): ASP.NET MVC
+* Baza podataka: MSSQL Server
+* ORM: Entity Framework Core
 
 ## Konfiguracija baze podataka
 
