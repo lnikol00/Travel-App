@@ -52,4 +52,6 @@ Tehnologije:
 
 ## Konfiguracija baze podataka
 
-Oba projekta pružaju robusna rješenja za rad s podacima kroz različite pristupe, prvi projekt koristi ručne SQL komande za kreiranje tablica te SQL procedure ili Entity Framework za rad sa podacima, dok drugi projekt koristi migracije za kreiranje te Entity Framework za rad sa podacima.
+* Oba projekta pružaju robusna rješenja za rad s podacima kroz različite pristupe-
+* Prvi projekt koristi ručne SQL komande za kreiranje tablica u bazi, te SQL procedure ili Entity Framework za rad sa podacima.
+* Drugi projekt koristi migracije za kreiranje tablica u bazi, te Entity Framework za rad sa podacima.
