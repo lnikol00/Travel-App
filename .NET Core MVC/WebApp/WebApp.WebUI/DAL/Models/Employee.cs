@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApp.WebUI.Data
+namespace WebApp.WebUI.DAL.Models
 {
     [Table("tEmployee")]
     public class Employee

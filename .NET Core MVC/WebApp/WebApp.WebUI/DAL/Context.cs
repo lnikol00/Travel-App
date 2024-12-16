@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApp.WebUI.DAL.Models;
 
 namespace WebApp.WebUI.Data
 {
