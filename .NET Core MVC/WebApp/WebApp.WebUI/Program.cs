@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using WebApp.WebUI.Data;
+
 namespace WebApp.WebUI
 {
     public class Program
@@ -8,6 +11,9 @@ namespace WebApp.WebUI
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<Context>(options =>
+               options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             var app = builder.Build();
 
