@@ -1,0 +1,42 @@
+﻿@model WebApp.WebUI.DAL.Models.Employee
+
+<div id="panel-1" class="panel">
+    <div class="panel-hdr py-3">
+        <h3 class="card-title">Add Employee</h3>
+    </div>
+    <div class="panel-container show">
+        <div class="panel-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="EditCreate" id="theForm" name="theForm" method="post">
+                        @Html.AntiForgeryToken()
+
+                        @if (Model != null && Model.Id > 0)
+                        {
+                            <input hidden asp-for="Id" />
+                        }
+
+                        <div class="form-horizontal pb-3">
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="form-label" for="Name">Name</label>
+                                    <input type="text" class="form-control" asp-for="Name">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="form-label" for="Registration">Last Name</label>
+                                    <input type="text" class="form-control" asp-for="LastName">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-info">Add</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

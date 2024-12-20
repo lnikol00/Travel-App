@@ -1,0 +1,22 @@
+﻿@model WebApp.WebUI.DAL.Models.Employee
+@{
+    ViewData["Title"] = "Delete";
+}
+
+@await Html.PartialAsync("Sifarnik/_ModalHeader", "Are you sure you want to delete?")
+
+<form asp-action="Delete"
+      id="modalForm"
+      name="modalForm"
+      data-ajax="true"
+      data-ajax-method="POST">
+    <input hidden asp-for="Id" />
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <p><strong>Name: </strong>: @Html.DisplayFor(model => model.Name)</p>
+            <p><strong>Last Name: </strong>: @Html.DisplayFor(model => model.LastName)</p>
+        </div>
+    </div>
+    @await Html.PartialAsync("Sifarnik/_ModalFooter", "Delete")
+</form>

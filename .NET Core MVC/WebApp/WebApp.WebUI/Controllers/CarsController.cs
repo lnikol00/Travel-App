@@ -24,8 +24,8 @@ namespace WebApp.WebUI.Controllers
         {
             if (id.HasValue)
             {
-                var ispis = await repository.GetByIdAsync<Cars>(id);
-                return View(ispis);
+                var car = await repository.GetByIdAsync<Cars>(id);
+                return View(car);
             }
             else
             {
@@ -39,11 +39,11 @@ namespace WebApp.WebUI.Controllers
         {
             if (car.Id > 0)
             {
-                var postoji = await repository.GetByIdAsync<Cars>(car.Id);
-                postoji.Name = car.Name;
-                postoji.Registration = car.Registration;
+                var exists = await repository.GetByIdAsync<Cars>(car.Id);
+                exists.Name = car.Name;
+                exists.Registration = car.Registration;
 
-                repository.Update<Cars>(postoji);
+                repository.Update<Cars>(exists);
                 await repository.SaveAsync();
                 TempData["success"] = "Car has been updated successfully";
             }

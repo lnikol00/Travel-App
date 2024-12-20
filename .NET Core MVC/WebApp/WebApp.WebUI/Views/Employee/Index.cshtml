@@ -1,8 +1,50 @@
-﻿@{
+﻿@model IEnumerable< WebApp.WebUI.DAL.Models.Employee>
+@{
     ViewData["Title"] = "Employee Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Employee Page</h1>
-</div>
 
+<div id="panel-1" class="panel">
+    <div class="panel-hdr py-3 d-flex justify-content-between">
+        <h3 class="card-title">Employee</h3>
+        <a href="/Employee/EditCreate" class="btn btn-info">  <i class="fas fa-plus"></i> Add</a>
+    </div>
+    <div class="panel-container show">
+        <div class="panel-content">
+            <table id="data-table" class="table table-sm table-bordered table-hover table-striped w-100 dataTable" role="grid" aria-describedby="data-table_info">
+                <thead class="thead-default">
+                    <tr role="row">
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Last Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var employee in Model)
+                    {
+                        <tr role="row" class="odd">
+                            <td>@employee.Id</td>
+                            <td>@employee.Name</td>
+                            <td>@employee.LastName</td>
+
+                            <td>
+                                <div class="btn-group btn-group-xs ">
+                                    <button class="btn  dropdown-toggle waves-effect waves-themed btn-group-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        Action
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a asp-controller="Cars" asp-action="EditCreate" asp-route-id="@employee.Id" class="dropdown-item" title="Uredi ispis"><i class="fa fa-edit"></i> Edit</a>
+
+                                        <button class="dropdown-item" id="delete" name="delete" onclick="otvoriCRUDModal('@Url.Action("Delete", "Employee", new { area = "", id = employee.Id })')"><i class="fa fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
