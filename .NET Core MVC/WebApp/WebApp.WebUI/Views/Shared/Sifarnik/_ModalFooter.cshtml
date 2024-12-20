@@ -1,0 +1,5 @@
+﻿@model string
+<div class="modal-footer">
+    <button onclick="zatvoriCRUDModal()" type="button" class="btn btn-secondary waves-effect waves-themed" title="Zatvori ekran" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button type="button" class="btn btn-primary waves-effect waves-themed" onclick="submitModalForm($('#modalForm'));" title=@Model value=@Model> @Model</button>
+</div> 

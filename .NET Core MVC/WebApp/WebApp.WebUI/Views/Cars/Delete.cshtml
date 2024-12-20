@@ -1,0 +1,22 @@
+﻿@model WebApp.WebUI.DAL.Models.Cars
+@{
+    ViewData["Title"] = "Brisanje";
+}
+
+@await Html.PartialAsync("Sifarnik/_ModalHeader", "Are you sure you want to delete?")
+
+<form asp-action="Delete"
+      id="modalForm"
+      name="modalForm"
+      data-ajax="true"
+      data-ajax-method="POST">
+    <input hidden asp-for="Id" />
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <p><strong>Car: </strong>: @Html.DisplayFor(model => model.Name)</p>
+            <p><strong>Registration: </strong>: @Html.DisplayFor(model => model.Registration)</p>
+        </div>
+    </div>
+    @await Html.PartialAsync("Sifarnik/_ModalFooter", "Delete")
+</form>

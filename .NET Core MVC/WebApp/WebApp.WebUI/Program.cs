@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.WebUI.Data;
+using WebApp.WebUI.Infrastructure.Interface;
+using WebApp.WebUI.Infrastructure.Repository;
 
 namespace WebApp.WebUI
 {
@@ -12,8 +14,13 @@ namespace WebApp.WebUI
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddRazorPages()
+                            .AddRazorRuntimeCompilation();
+
             builder.Services.AddDbContext<Context>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+            builder.Services.AddScoped<IRepository, EFRepository<Context>>();
 
             var app = builder.Build();
 

@@ -1,31 +1,115 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: "Quicksand", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 60px;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    text-align: start;
+}
+
+/* Dropdown Button */
+.btn-group .dropdown-toggle {
+    background-color: #6c757d; /* Button color (secondary) */
+    color: white; /* Button text color */
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem; /* Small button size */
+    display: flex;
+    align-items: center;
+}
+
+/* Dropdown Menu */
+.btn-group .dropdown-menu {
+    background-color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+    margin-top: 0.5rem;
+    min-width: 160px; /* Minimum width for the menu */
+    font-size: 0.875rem;
+    z-index: 1000;
+}
+
+/* Dropdown Menu Items */
+.btn-group .dropdown-item {
+    padding: 0.5rem 1rem;
+    color: #212529;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+    .btn-group .dropdown-item i {
+        margin-right: 8px; /* Spacing for icons */
+        font-size: 1.125rem; /* Icon size */
+    }
+
+    /* Hover effect for dropdown items */
+    .btn-group .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #0056b3;
+    }
+
+    /* Disabled/Hidden State */
+    .btn-group .dropdown-item[disabled] {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+
+/* Modal */
+
+/* Sadržaj modala */
+.modal-dialog {
+    max-width: 500px;
+    margin: 10% auto;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 0.3rem;
+    padding: 20px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.close {
+    cursor: pointer;
 }
