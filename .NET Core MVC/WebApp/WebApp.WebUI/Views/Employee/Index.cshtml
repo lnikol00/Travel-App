@@ -35,7 +35,7 @@
                                         Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a asp-controller="Cars" asp-action="EditCreate" asp-route-id="@employee.Id" class="dropdown-item" title="Uredi ispis"><i class="fa fa-edit"></i> Edit</a>
+                                        <a asp-controller="Employee" asp-action="EditCreate" asp-route-id="@employee.Id" class="dropdown-item" title="Uredi ispis"><i class="fa fa-edit"></i> Edit</a>
 
                                         <button class="dropdown-item" id="delete" name="delete" onclick="otvoriCRUDModal('@Url.Action("Delete", "Employee", new { area = "", id = employee.Id })')"><i class="fa fa-trash"></i> Delete</button>
                                     </div>

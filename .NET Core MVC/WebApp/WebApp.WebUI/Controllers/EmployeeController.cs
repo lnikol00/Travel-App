@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApp.WebUI.DAL.Models;
 using WebApp.WebUI.Infrastructure.Interface;
+using WebApp.WebUI.Models;
 
 namespace WebApp.WebUI.Controllers
 {
@@ -19,6 +20,22 @@ namespace WebApp.WebUI.Controllers
             return View(data);
         }
 
+        public async Task<JsonResult> GetDropdownEmployee(int id)
+        {
+            var employee = await repository.GetAllAsync<Employee>();
+
+            List<ListViewModel> items = new List<ListViewModel>();
+            foreach (var emp in employee)
+            {
+                items.Add(new ListViewModel
+                {
+                    text = string.Format("{0} - {1} {2}", emp.Id, emp.Name, emp.LastName),
+                    id = emp.Id.ToString(),
+                    selected = (id == emp.Id)
+                });
+            }
+            return await Task.FromResult(Json(items));
+        }
 
         public async Task<IActionResult> EditCreate(int? id)
         {
@@ -69,7 +86,7 @@ namespace WebApp.WebUI.Controllers
         {
             Employee employee = await repository.GetByIdAsync<Employee>(id);
 
-            TravelOrder travelOrder = await repository.GetOneAsync<TravelOrder>(x => x.CarsId == id);
+            TravelOrder travelOrder = await repository.GetOneAsync<TravelOrder>(x => x.EmployeeId == id);
 
             bool isEmployeeInTravelOrder = false;
 
@@ -86,7 +103,7 @@ namespace WebApp.WebUI.Controllers
             {
                 repository.Delete(employee);
                 await repository.SaveAsync();
-                TempData["success"] = "Car deleted successfuly";
+                TempData["success"] = "Employee deleted successfuly";
             }
 
             return RedirectToAction("Index");

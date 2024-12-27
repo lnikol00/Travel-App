@@ -1,8 +1,61 @@
-﻿@{
+﻿@model IEnumerable< WebApp.WebUI.DAL.Models.TravelOrder>
+
+@{
     ViewData["Title"] = "Travel Orders Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Travel Orders Page</h1>
-</div>
 
+<div id="panel-1" class="panel">
+    <div class="panel-hdr py-3 d-flex justify-content-between">
+        <h3 class="card-title">Travel Order</h3>
+        <a href="/TravelOrder/EditCreate" class="btn btn-info">  <i class="fas fa-plus"></i> Add</a>
+    </div>
+    <div class="panel-container show">
+        <div class="panel-content">
+            <table id="data-table" class="table table-sm table-bordered table-hover table-striped w-100 dataTable" role="grid" aria-describedby="data-table_info">
+                <thead class="thead-default">
+                    <tr role="row">
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Last Name</th>
+                        <th>Car Brand</th>
+                        <th>Registration</th>
+                        <th>Date</th>
+                        <th>Mileage</th>
+                        <th>Route</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var travelOrder in Model)
+                    {
+                        <tr role="row" class="odd">
+                            <td>@travelOrder.Id</td>
+                            <td>@travelOrder.Employee.Name</td>
+                            <td>@travelOrder.Employee.LastName</td>
+                            <td>@travelOrder.Cars.Name</td>
+                            <td>@travelOrder.Cars.Registration</td>
+                            <td>@travelOrder.Date</td>
+                            <td>@travelOrder.Mileage <span>km</span></td>
+                            <td>@travelOrder.Route</td>
+
+                            <td>
+                                <div class="btn-group btn-group-xs ">
+                                    <button class="btn  dropdown-toggle waves-effect waves-themed btn-group-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        Action
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a asp-controller="TravelOrder" asp-action="EditCreate" asp-route-id="@travelOrder.Id" class="dropdown-item" title="Uredi ispis"><i class="fa fa-edit"></i> Edit</a>
+
+                                        <button class="dropdown-item" id="delete" name="delete" onclick="otvoriCRUDModal('@Url.Action("Delete", "TravelOrder", new { area = "", id = travelOrder.Id })')"><i class="fa fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

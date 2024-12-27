@@ -28,11 +28,11 @@ namespace WebApp.WebUI.DAL.Models
         public int EmployeeId { get; set; }
 
         [Display(Name = "Cars")]
-        [ForeignKey("Car")]
+        [ForeignKey("Cars")]
         public int CarsId { get; set; }
 
         public virtual Employee Employee { get; set; }
 
-        public virtual Cars Car { get; set; }
+        public virtual Cars Cars { get; set; }
     }
 }
