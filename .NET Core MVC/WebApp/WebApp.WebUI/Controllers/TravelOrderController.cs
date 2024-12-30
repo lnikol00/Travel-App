@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApp.WebUI.DAL.Models;
 using WebApp.WebUI.Infrastructure.Interface;
+using WebApp.WebUI.Models;
 
 namespace WebApp.WebUI.Controllers
 {
@@ -78,5 +79,42 @@ namespace WebApp.WebUI.Controllers
 
             return RedirectToAction("Index");
         }
+
+        #region Get dropdowns
+        public async Task<JsonResult> GetDropdownCars(int id)
+        {
+            var cars = await repository.GetAllAsync<Cars>();
+
+            List<ListViewModel> items = new List<ListViewModel>();
+            foreach (var car in cars)
+            {
+                items.Add(new ListViewModel
+                {
+                    text = string.Format("{0} - {1} {2}", car.Id, car.Name, car.Registration),
+                    id = car.Id,
+                    selected = (id == car.Id)
+                });
+            }
+            return Json(items);
+        }
+
+        public async Task<JsonResult> GetDropdownEmployee(int id)
+        {
+            var employee = await repository.GetAllAsync<Employee>();
+
+            List<ListViewModel> items = new List<ListViewModel>();
+            foreach (var emp in employee)
+            {
+                items.Add(new ListViewModel
+                {
+                    text = string.Format("{0} - {1} {2}", emp.Id, emp.Name, emp.LastName),
+                    id = emp.Id,
+                    selected = (id == emp.Id)
+                });
+            }
+            return Json(items);
+        }
+        #endregion
+
     }
 }

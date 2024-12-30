@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApp.WebUI.DAL.Models;
 using WebApp.WebUI.Infrastructure.Interface;
-using WebApp.WebUI.Models;
 
 namespace WebApp.WebUI.Controllers
 {
@@ -18,23 +17,6 @@ namespace WebApp.WebUI.Controllers
             var data = (await repository.GetAllAsync<Employee>(includeProperties: "", orderBy: x => x.OrderBy(p => p.Id))).ToList();
 
             return View(data);
-        }
-
-        public async Task<JsonResult> GetDropdownEmployee(int id)
-        {
-            var employee = await repository.GetAllAsync<Employee>();
-
-            List<ListViewModel> items = new List<ListViewModel>();
-            foreach (var emp in employee)
-            {
-                items.Add(new ListViewModel
-                {
-                    text = string.Format("{0} - {1} {2}", emp.Id, emp.Name, emp.LastName),
-                    id = emp.Id.ToString(),
-                    selected = (id == emp.Id)
-                });
-            }
-            return await Task.FromResult(Json(items));
         }
 
         public async Task<IActionResult> EditCreate(int? id)

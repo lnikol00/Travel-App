@@ -20,13 +20,11 @@
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label class="form-label" for="EmployeeId">Employee</label>
-                                    <select url="@Url.Action("GetDropdownEmployee", "Employee", new { Area = "", id = Model?.EmployeeId })" class="form-control" asp-for="EmployeeId"></select>
-                                    @* <input type="number" asp-for="EmployeeId"> *@
+                                    <select url="@Url.Action("GetDropdownEmployee", "TravelOrder", new { Area = "", id = Model?.EmployeeId })" class="form-control" asp-for="EmployeeId"></select>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label class="form-label" for="CarsId">Car</label>
-                                    <select url="@Url.Action("GetDropdownCars", "Cars", new { Area = "", id = Model?.CarsId })" class="form-control" asp-for="CarsId"></select>
-                                    @* <input type="number" asp-for="CarsId"> *@
+                                    <select url="@Url.Action("GetDropdownCars", "TravelOrder", new { Area = "", id = Model?.CarsId })" class="form-control" asp-for="CarsId"></select>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label class="form-label" for="Registration">Date</label>
@@ -53,4 +51,26 @@
     </div>
 </div>
 
+@section scripts {
+    <script>
+            $("#theForm").submit(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = $(this).serialize(); // Serialize the form data
+
+            $.ajax({
+                url: $(this).attr("action"),
+                type: "POST",
+                data: formData, // Send the form data to the server
+                success: function (response) {
+                    window.location.href = "/TravelOrder/Index";
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error submitting form: ", error);
+                }
+            });
+        });
+
+    </script>
+}
 

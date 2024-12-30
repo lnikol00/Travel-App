@@ -53,7 +53,7 @@ function submitModalForm(forma) {
         forma.submit();
     }
     else {
-        PrikaziGresku("Nije moguće spremiti podatke. Molim Vas provjerite da li su svi podatci popunjeni.");
+        TempData["error"] = "Not able to save data, Please check if everything is in order.";
     }
 
 }
